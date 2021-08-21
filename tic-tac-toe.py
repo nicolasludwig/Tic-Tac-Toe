@@ -10,6 +10,10 @@ def msgError():
     print("Digite um valor válido!")
     input("Pressione ENTER")
 
+def msgError2():
+    print("Posição já preenchida!")
+    input("Pressione ENTER")
+
 def passaJogador(jogador):
     if jogador==1:
         return 2,'O'
@@ -36,18 +40,25 @@ def desenhaMatriz():
             aux+=1
     print("\n")
 
-#Inicia com o jogador 1
-quemJoga=1
-caracter='X'
-while True:
-    desenhaMatriz()
+def jogando():
+    global quemJoga
+    global caracter
     print("Vez do jogador "+str(quemJoga)+"!")
     linha=input("Linha: ")
     coluna=input("Coluna: ")
     if (int(linha) or int(coluna))<0: msgError()
     else:
         try:
-            matriz[int(linha)][int(coluna)]=caracter
-            quemJoga,caracter=passaJogador(quemJoga)
+            if matriz[int(linha)][int(coluna)] != " ": msgError2()
+            else:
+                matriz[int(linha)][int(coluna)]=caracter
+                quemJoga,caracter=passaJogador(quemJoga)
         except:
             msgError()
+
+#Inicia com o jogador 1
+quemJoga=1
+caracter='X'
+while True:
+    desenhaMatriz()
+    jogando()
