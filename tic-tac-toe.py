@@ -3,6 +3,15 @@ import random
 
 palavra=['L','I','N','H','A']
 
+def geraAleatorio(): #Função para jogo contra o PC
+    m=[]
+    for i in range(0,3):
+        for j in range (0,3):
+            if (matriz[i][j] == " "):
+                m.append([i,j])
+    numRand = random.randint(0,len(m)-1)
+    matriz[m[numRand][0]][m[numRand][1]]='O'
+
 def geraMatriz():
     return [[" "]*3 for _ in range(3)]
 
@@ -73,16 +82,24 @@ def jogando():
     global quemJoga
     global caracter
     global countJogadas
-    print("Vez do jogador "+str(quemJoga)+"!")
-    linha=input("Linha: ")
-    coluna=input("Coluna: ")
-    if (int(linha) or int(coluna))<0: msgError()
+    global modoJogo
+    if int(modoJogo)==2 and quemJoga==2:
+        geraAleatorio()
+        quemJoga,caracter=passaJogador(quemJoga)
     else:
+        print("Vez do jogador "+str(quemJoga)+"!")
+        linha=input("Linha: ")
+        coluna=input("Coluna: ")
         try:
-            if matriz[int(linha)][int(coluna)] != " ": msgError2()
+            if (int(linha) or int(coluna))<0: msgError()
             else:
-                matriz[int(linha)][int(coluna)]=caracter
-                quemJoga,caracter=passaJogador(quemJoga)
+                try:
+                    if matriz[int(linha)][int(coluna)] != " ": msgError2()
+                    else:
+                        matriz[int(linha)][int(coluna)]=caracter
+                        quemJoga,caracter=passaJogador(quemJoga)
+                except:
+                    msgError()
         except:
             msgError()
     if countJogadas >= 3:
@@ -94,9 +111,14 @@ def jogando():
 #Inicia com o jogador 1
 quemJoga=1
 caracter='X'
-countJogadas=1
+countJogadas=0
 jogarNovamente='s'
 matriz=geraMatriz()
+while True:
+    os.system("cls")
+    print("\nJOGO DA VELHA\n")
+    modoJogo = input("Jogar contra player (1) ou PC (2)? R: ")
+    if (int(modoJogo)==1 or int(modoJogo)==2): break
 while jogarNovamente=='s':
     vencedor=0
     desenhaMatriz()
@@ -108,5 +130,5 @@ while jogarNovamente=='s':
         if jogarNovamente=='s':
             quemJoga=1
             caracter='X'
-            countJogadas=1
+            countJogadas=0
             matriz=geraMatriz()
